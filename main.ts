@@ -12,6 +12,7 @@ import { CicdStack, QueueStack, RoleStack, StorageStack } from './stacks';
 import { config } from './utils';
 
 // Wrap cdk app with async IIFE function to enable async cdk-graph report
+// eslint-disable-next-line no-void
 void (async function () {
   const app = new App();
 
@@ -44,7 +45,7 @@ void (async function () {
             format: DiagramFormat.PNG,
             theme: 'light',
             filterPlan: {
-              preset: FilterPreset.COMPACT,
+              preset: FilterPreset.COMPACT
             }
           }
         ]
