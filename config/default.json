@@ -1,0 +1,15 @@
+{
+  "aws": {
+    "region": "us-east-1"
+  },
+  "github": {
+    "infra": {
+      "repository": "realworld-nodejs-example-app-infra",
+      "owner": "kenyipp"
+    },
+    "conduitServer": {
+      "repository": "realworld-nodejs-example-app",
+      "owner": "kenyipp"
+    }
+  }
+}

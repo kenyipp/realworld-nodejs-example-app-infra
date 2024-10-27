@@ -1,0 +1,17 @@
+{
+  "nodeEnv": "NODE_ENV",
+  "aws": {
+    "region": "AWS_REGION",
+    "accountId": "AWS_ACCOUNT_ID"
+  },
+  "github": {
+    "infra": {
+      "repository": "GITHUB_INFRA_REPOSITORY",
+      "owner": "GITHUB_INFRA_OWNER"
+    },
+    "conduitServer": {
+      "repository": "GITHUB_CONDUIT_SERVER_REPOSITORY",
+      "owner": "GITHUB_CONDUIT_SERVER_OWNER"
+    }
+  }
+}
