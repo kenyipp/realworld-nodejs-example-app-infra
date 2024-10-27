@@ -6,6 +6,7 @@ Example Node (Express + Knex) codebase containing real world examples (CRUD, aut
 
 <!-- The badges section -->
 <p align="center">
+<a href="https://github.com/kenyipp/realworld-nodejs-example-app-infra/actions/workflows/ci.yml"><img src="https://github.com/kenyipp/realworld-nodejs-example-app-infra/workflows/Continuous Integration/badge.svg" alt="Actions Status"></a>
 <!-- Snyk.io vulnerabilities badge -->
 <a href="https://snyk.io/test/github/kenyipp/realworld-nodejs-example-app-infra"><img src="https://snyk.io/test/github/kenyipp/realworld-nodejs-example-app-infra/badge.svg" alt="Known Vulnerabilities"></a>
 <!-- Shields.io license badge -->

@@ -228,6 +228,23 @@ export class CicdStack extends Stack {
           commands: [
             `yarn deploy ${Stacks.Cicd}` // Deploy the lambda function using AWS CDK
           ]
+        },
+        post_build: {
+          commands: [
+            // Check the exit code of the previous command
+            'BUILD_STATUS=$?',
+            // Determine the state based on the build status
+            'if [ $BUILD_STATUS -eq 0 ]; then STATE="success"; DESCRIPTION="Build completed successfully."; else STATE="failure"; DESCRIPTION="Build failed."; fi',
+            // Update the status of the commit on GitHub
+            // eslint-disable-next-line no-multi-str
+            'curl -X POST -H "Authorization: token [[TOKEN]]" \
+            -H "Content-Type: application/json" \
+            -d "{\\"state\\": \\"$STATE\\", \\"description\\": \\"$DESCRIPTION\\", \\"context\\": \\"Deployment / CodeBuild\\"}" \
+            "https://api.github.com/repos/[[NAME]]/[[REPO]]/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"'
+              .replace('[[TOKEN]]', githubToken.secretValue.toString())
+              .replace('[[NAME]]', config.github.infra.owner)
+              .replace('[[REPO]]', config.github.infra.repository)
+          ]
         }
       },
       artifacts: {
