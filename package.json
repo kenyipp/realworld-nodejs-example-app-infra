@@ -1,6 +1,7 @@
 {
   "name": "@conduit/infra",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "license": "ISC",
   "author": "ken.yip",
@@ -13,6 +14,11 @@
     "lint:fix": "eslint . --fix",
     "prettify": "prettier --write .",
     "synth": "cdk synth"
+  },
+  "release": {
+    "branches": [
+      "master"
+    ]
   },
   "dependencies": {
     "@aws/pdk": "^0.25.0",
