@@ -40,5 +40,5 @@
 
 ### Release Workflow
 
-- [ ] Set the PR target to `main` (source branch: `staging`).
+- [ ] Set the PR target to `Master` (source branch: `develop`).
 - [ ] Use **Merge Commits** with the message: `Release [Develop → Master]`.
