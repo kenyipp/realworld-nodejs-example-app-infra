@@ -7,6 +7,7 @@ export interface CicdStackProps extends StackProps {
   artifactBucketArn: string;
   codeBuildRoleArn: string;
   codePipelineRoleArn: string;
+  lambdaRoleArn: string;
 }
 
 /**
@@ -48,6 +49,7 @@ export interface SetupAppDeployPipelineInput {
   pipelineRole: IRole;
   codeBuildRole: IRole;
   artifactBucket: IBucket;
+  lambdaRoleArn: string;
 }
 
 export type SetupAppDeployPipelineOutput = Pipeline;

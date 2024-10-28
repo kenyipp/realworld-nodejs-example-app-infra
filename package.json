@@ -1,6 +1,7 @@
 {
   "name": "@conduit/infra",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "license": "ISC",
   "author": "ken.yip",
@@ -14,9 +15,14 @@
     "prettify": "prettier --write .",
     "synth": "cdk synth"
   },
+  "release": {
+    "branches": [
+      "master"
+    ]
+  },
   "dependencies": {
     "@aws/pdk": "^0.25.0",
-    "aws-cdk": "2.161.1",
+    "aws-cdk": "^2.164.1",
     "aws-cdk-lib": "2.161.1",
     "config": "^3.3.12",
     "constructs": "^10.4.1",

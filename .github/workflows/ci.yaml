@@ -1,0 +1,28 @@
+name: Continuous Integration
+
+on:
+  push:
+    paths-ignore:
+      - '**.md' # Ignore changes to markdown files
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.18.0
+          cache: 'yarn' # Cache Yarn dependencies
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile # Ensures dependencies match yarn.lock
+
+      - name: Run Code Linting
+        run: yarn lint

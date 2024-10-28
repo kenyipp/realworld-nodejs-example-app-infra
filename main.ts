@@ -12,6 +12,7 @@ import { CicdStack, QueueStack, RoleStack, StorageStack } from './stacks';
 import { config } from './utils';
 
 // Wrap cdk app with async IIFE function to enable async cdk-graph report
+// eslint-disable-next-line no-void, func-names
 void (async function () {
   const app = new App();
 
@@ -30,7 +31,8 @@ void (async function () {
     env,
     codePipelineRoleArn: roleStack.codePipelineRole.roleArn,
     codeBuildRoleArn: roleStack.codeBuildRole.roleArn,
-    artifactBucketArn: bucketStorage.artifactBucket.bucketArn
+    artifactBucketArn: bucketStorage.artifactBucket.bucketArn,
+    lambdaRoleArn: roleStack.defaultLambdaRole.roleArn
   });
 
   // Generate a diagram for the whole architecture
@@ -44,7 +46,7 @@ void (async function () {
             format: DiagramFormat.PNG,
             theme: 'light',
             filterPlan: {
-              preset: FilterPreset.COMPACT,
+              preset: FilterPreset.COMPACT
             }
           }
         ]
