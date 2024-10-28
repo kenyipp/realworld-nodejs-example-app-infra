@@ -32,9 +32,6 @@ jobs:
       name: develop
     runs-on: ubuntu-latest
     needs: lint
-    if: |
-      github.event.workflow_run.conclusion == 'success' &&  
-      contains(github.event.workflow_run.head_branch, 'master')
     steps:
       - name: Trigger AWS CodePipeline
         run:
