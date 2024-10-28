@@ -70,10 +70,13 @@ repositories:
 ### Installation
 
 1. Clone the repository:
+
    ```sh
    git clone https://github.com/kenyipp/realworld-nodejs-example-app-infra
    ```
+
 2. Install dependencies:
+
    ```sh
    yarn install
    ```
@@ -81,14 +84,19 @@ repositories:
 ### Usage
 
 1. Bootstrap the CDK environment (if not already done):
+
    ```sh
    cdk bootstrap aws://<account-id>/<region>
    ```
+
 2. Synthesize the CloudFormation templates:
+
    ```sh
    cdk synth
    ```
+
 3. View available stacks:
+
    ```sh
    cdk list
    ```
@@ -99,6 +107,27 @@ expectations. Adjust the preset and filter in `main.ts`. For more details on
 generating the graph, click [here](#).
 
 ### Deployment
+
+We are using Amazon CDK to deploy the application. Additionally, we have set up a
+CI/CD pipeline to automatically deploy the CDK application once the lint check and
+test cases pass.
+
+#### Setup Environment Variables
+
+| **Environment Variable**           | **Description**                                                                       | **Example**                        |
+| ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------- |
+| `NODE_ENV`                         | The running environment (e.g., development, production)                               | develop, production                |
+| `AWS_ACCOUNT_ID`                   | The AWS account ID. You can get it from the AWS Management Console under "My Account" | 123456789012                       |
+| `GITHUB_INFRA_REPOSITORY`          | The repository name of the infrastructure                                             | realworld-nodejs-example-app-infra |
+| `GITHUB_INFRA_OWNER`               | The owner of the infrastructure repository                                            | kenyipp                            |
+| `GITHUB_CONDUIT_SERVER_REPOSITORY` | The repository name of the server                                                     | realworld-nodejs-example-app       |
+| `GITHUB_CONDUIT_SERVER_OWNER`      | The owner of the server repository                                                    | kenyipp                            |
+
+Note: If you want to deploy the application automatically via GitHub Actions, you
+need to set up the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the GitHub
+settings.
+
+#### Deploy the infrastructure using CDK
 
 To deploy a specific stack, use:
 

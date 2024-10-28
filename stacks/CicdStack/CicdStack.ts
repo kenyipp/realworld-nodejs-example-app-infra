@@ -1,4 +1,4 @@
-import { Aws, CfnOutput, Stack } from 'aws-cdk-lib';
+import { CfnOutput, Stack } from 'aws-cdk-lib';
 import {
   BuildSpec,
   LinuxBuildImage,
@@ -54,14 +54,16 @@ export class CicdStack extends Stack {
     this.appDeployPipeline = this.setupAppDeployPipeline({
       artifactBucket,
       codeBuildRole,
-      pipelineRole
+      pipelineRole,
+      lambdaRoleArn: props.lambdaRoleArn
     });
   }
 
   private setupAppDeployPipeline({
     artifactBucket,
     codeBuildRole,
-    pipelineRole
+    pipelineRole,
+    lambdaRoleArn
   }: SetupAppDeployPipelineInput): SetupAppDeployPipelineOutput {
     // Define the artifacts for passing through the pipeline
     const sourceOutput = new Artifact();
@@ -85,12 +87,12 @@ export class CicdStack extends Stack {
     );
 
     const buildSpec = BuildSpec.fromObject({
-      version: '0.2',
+      version: 0.2,
       env: {
         variables: {
           NODE_ENV: config.nodeEnv,
-          AWS_REGION: Aws.REGION,
-          AWS_ACCOUNT_ID: Aws.ACCOUNT_ID,
+          AWS_REGION: config.aws.region,
+          AWS_ACCOUNT_ID: config.aws.accountId,
           DATABASE_HOST: databaseConfig.secretValueFromJson('host').toString(),
           DATABASE_NAME: databaseConfig.secretValueFromJson('dbname').toString(),
           DATABASE_USER: databaseConfig.secretValueFromJson('username').toString(),
@@ -98,7 +100,8 @@ export class CicdStack extends Stack {
             .secretValueFromJson('password')
             .toString(),
           DATABASE_PORT: databaseConfig.secretValueFromJson('port').toString(),
-          AUTH_JWT_SECRET: jwtSecret.secretValue.toString()
+          AUTH_JWT_SECRET: jwtSecret.secretValue.toString(),
+          AWS_ROLE_LAMBDA_ARN: lambdaRoleArn
         }
       },
       phases: {
@@ -124,14 +127,9 @@ export class CicdStack extends Stack {
         build: {
           commands: [
             'yarn build', // Build the project
-            'yarn install --production --frozen-lockfile' // Ensure only production dependencies
-          ]
-        },
-        post_build: {
-          commands: [
+            'yarn install --production --frozen-lockfile', // Ensure only production dependencies
             'cd ./infra',
-            `yarn deploy --exclusively ${Stacks.Lambda}`, // Deploy the lambda function using AWS CDK
-            `yarn deploy --exclusively ${Stacks.Api}` // Deploy the api using AWS CDK
+            'yarn deploy --all'
           ]
         }
       },
@@ -166,7 +164,7 @@ export class CicdStack extends Stack {
               owner: config.github.conduitServer.owner,
               repo: config.github.conduitServer.repository,
               oauthToken: githubToken.secretValue,
-              branch: config.nodeEnv, // We are using the branch as the environment
+              branch: config.nodeEnv === 'prod' ? 'master' : 'develop',
               output: sourceOutput,
               trigger: GitHubTrigger.NONE // We don't want to trigger the pipeline on every push
             })
@@ -207,12 +205,12 @@ export class CicdStack extends Stack {
     );
 
     const buildSpec = BuildSpec.fromObject({
-      version: '0.2',
+      version: 0.2,
       env: {
         variables: {
           NODE_ENV: config.nodeEnv,
-          AWS_REGION: Aws.REGION,
-          AWS_ACCOUNT_ID: Aws.ACCOUNT_ID
+          AWS_REGION: config.aws.region,
+          AWS_ACCOUNT_ID: config.aws.accountId
         }
       },
       phases: {
@@ -227,23 +225,6 @@ export class CicdStack extends Stack {
         build: {
           commands: [
             `yarn deploy ${Stacks.Cicd}` // Deploy the lambda function using AWS CDK
-          ]
-        },
-        post_build: {
-          commands: [
-            // Check the exit code of the previous command
-            'BUILD_STATUS=$?',
-            // Determine the state based on the build status
-            'if [ $BUILD_STATUS -eq 0 ]; then STATE="success"; DESCRIPTION="Build completed successfully."; else STATE="failure"; DESCRIPTION="Build failed."; fi',
-            // Update the status of the commit on GitHub
-            // eslint-disable-next-line no-multi-str
-            'curl -X POST -H "Authorization: token [[TOKEN]]" \
-            -H "Content-Type: application/json" \
-            -d "{\\"state\\": \\"$STATE\\", \\"description\\": \\"$DESCRIPTION\\", \\"context\\": \\"Deployment / CodeBuild\\"}" \
-            "https://api.github.com/repos/[[NAME]]/[[REPO]]/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"'
-              .replace('[[TOKEN]]', githubToken.secretValue.toString())
-              .replace('[[NAME]]', config.github.infra.owner)
-              .replace('[[REPO]]', config.github.infra.repository)
           ]
         }
       },
@@ -278,7 +259,7 @@ export class CicdStack extends Stack {
               owner: config.github.infra.owner,
               repo: config.github.infra.repository,
               oauthToken: githubToken.secretValue,
-              branch: config.nodeEnv, // We are using the branch as the environment
+              branch: config.nodeEnv === 'prod' ? 'master' : 'develop',
               output: sourceOutput,
               trigger: GitHubTrigger.NONE // We don't want to trigger the pipeline on every push
             })

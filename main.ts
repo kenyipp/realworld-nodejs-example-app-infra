@@ -31,7 +31,8 @@ void (async function () {
     env,
     codePipelineRoleArn: roleStack.codePipelineRole.roleArn,
     codeBuildRoleArn: roleStack.codeBuildRole.roleArn,
-    artifactBucketArn: bucketStorage.artifactBucket.bucketArn
+    artifactBucketArn: bucketStorage.artifactBucket.bucketArn,
+    lambdaRoleArn: roleStack.defaultLambdaRole.roleArn
   });
 
   // Generate a diagram for the whole architecture

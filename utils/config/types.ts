@@ -1,5 +1,5 @@
 export interface Config {
-  nodeEnv: 'develop' | 'master';
+  nodeEnv: 'develop' | 'prod';
   appDomain?: string;
   aws: {
     region: string;
