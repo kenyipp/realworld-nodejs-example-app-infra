@@ -2,7 +2,7 @@ import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { ManagedPolicy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
-import { Roles } from '../constants';
+import { Roles } from '../../constants';
 
 export class RoleStack extends Stack {
   public readonly codePipelineRole: Role;

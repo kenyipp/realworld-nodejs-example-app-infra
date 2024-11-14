@@ -1,23 +1,22 @@
 import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
-import { Buckets } from '../constants';
+import { Buckets } from '../../constants';
 
 export class StorageStack extends Stack {
-  public readonly artifactBucket: Bucket;
+  public readonly artifactBucket: s3.Bucket;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    this.artifactBucket = this.getArtifactBucket();
+    this.artifactBucket = this.setupArtifactBucket();
   }
 
-  private getArtifactBucket(): Bucket {
-    const bucket = new Bucket(this, Buckets.ArtifactBucket, {
+  private setupArtifactBucket(): s3.Bucket {
+    const bucket = new s3.Bucket(this, Buckets.ArtifactBucket, {
       versioned: true,
       removalPolicy: RemovalPolicy.RETAIN
     });
-
     return bucket;
   }
 }
